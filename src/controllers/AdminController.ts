@@ -13,6 +13,14 @@ export const CreateVendor = async (
         const { name, address, pincode, foodType, email, password, ownerName, phone }  = <CreateVandorInput>req.body;
 
 
+        const CheckExistingVendor = await Vendor.findOne({email : email})
+
+
+        if(CheckExistingVendor !== null){ 
+          return res.json({message: "A Vendor already exists with this email"})
+        }
+
+
         const createdVandor =  await Vendor.create({
             name: name,
             address: address,
@@ -20,14 +28,14 @@ export const CreateVendor = async (
             foodType: foodType,
             email: email,
             password: password,
-            salt: password,
+            salt: 'jjjjjj kkkkkkkk',
             ownerName: ownerName,
             phone: phone,
             rating: 0,
             serviceAvailable: false,
             coverImages: [],
-            lat: 0,
-            lng: 0
+            // lat: 0,
+            // lng: 0
         })
     
         return res.json(createdVandor)
