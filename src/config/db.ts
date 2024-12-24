@@ -1,6 +1,5 @@
+export const APP_SECRET = '238745623hsdf'
 import mongoose from 'mongoose';
-
-
 
 
 const connectDB = async () => {
