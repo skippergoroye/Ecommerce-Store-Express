@@ -22,11 +22,12 @@ export const VendorLogin = async (
       );
 
       if (validation) {
-        const signature = GenerateSignature({
+        const signature = await GenerateSignature({
             _id: existingVendor.id,
             email: existingVendor.email,
             name:  existingVendor.name
         })
+
 
         return res.json(signature)
       } else {
@@ -82,6 +83,7 @@ export const UpdateVendorProfile = async (
     next: NextFunction
   ) => {
     try {
+        
     } catch (error) {
       console.log(error);
       next(error);

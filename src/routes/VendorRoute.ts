@@ -11,8 +11,6 @@ router.patch('/service', UpdateVendorService);
 
 
 
-
-
 router.get('/', (req: Request, res: Response, next: NextFunction) => {
  
     res.json({ message: "Hello from Vendor"})
