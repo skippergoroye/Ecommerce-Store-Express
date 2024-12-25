@@ -1,7 +1,10 @@
 import { Request, Response, NextFunction } from "express";
-import { VendorLoginInput } from "../dto";
+import { CustomRequest, EditVendorInput, VendorLoginInput } from "../dto";
 import { Vendor } from "../models";
-import { GenerateSignature, ValidatePassword } from "../utility/PasswordUtility";
+import {
+  GenerateSignature,
+  ValidatePassword,
+} from "../utility/PasswordUtility";
 
 export const VendorLogin = async (
   req: Request,
@@ -23,13 +26,12 @@ export const VendorLogin = async (
 
       if (validation) {
         const signature = await GenerateSignature({
-            _id: existingVendor.id,
-            email: existingVendor.email,
-            name:  existingVendor.name
-        })
+          _id: existingVendor.id,
+          email: existingVendor.email,
+          name: existingVendor.name,
+        });
 
-
-        return res.json(signature)
+        return res.json(signature);
       } else {
         return res.json({ message: "Password is not valid" });
       }
@@ -43,12 +45,19 @@ export const VendorLogin = async (
 };
 
 export const GetVendorProfile = async (
-  req: Request,
+  req: CustomRequest,
   res: Response,
   next: NextFunction
 ) => {
   try {
+    const user = req.user;
 
+    if (user) {
+      const existingVendor = await Vendor.findById(user._id);
+      return res.json(existingVendor);
+    }
+
+    return res.json({ message: "vendor Information Not Found" });
   } catch (error) {
     console.log(error);
     next(error);
@@ -59,33 +68,46 @@ export const GetVendorProfile = async (
 
 
 
-
 export const UpdateVendorProfile = async (
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ) => {
-    try {
-    } catch (error) {
-      console.log(error);
-      next(error);
+  req: CustomRequest,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const { foodType, name, address, phone } = <EditVendorInput>req.body;
+
+    const user = req.user;
+    if (user) {
+      const existingVendor = await Vendor.findById(user._id);
+
+      if (existingVendor) {
+        existingVendor.name = name;
+        existingVendor.address = address;
+        existingVendor.phone = phone;
+        existingVendor.foodType = foodType;
+        const saveResult = await existingVendor.save();
+
+        return res.json(saveResult);
+      }
+
+      return res.status(404).json({ message: 'Vendor not found' });
     }
-  };
 
+    return res.status(401).json({ message: 'User not authenticated' });
+  } catch (error) {
+    console.log(error);
+    next(error);
+  }
+};
 
-
-
-
-
-  export const UpdateVendorService = async (
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ) => {
-    try {
-        
-    } catch (error) {
-      console.log(error);
-      next(error);
-    }
-  };
+export const UpdateVendorService = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+  } catch (error) {
+    console.log(error);
+    next(error);
+  }
+};
