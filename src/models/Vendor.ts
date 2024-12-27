@@ -2,7 +2,6 @@ import mongoose, { Schema, Document, Model } from 'mongoose';
 
 
 interface VendorDoc extends Document {
-
     name: string;
     ownerName: string;
     foodType: [string];
@@ -50,7 +49,6 @@ const VendorSchema = new Schema({
             delete ret.__v;
             delete ret.createdAt;
             delete ret.updatedAt;
-
         }
     },
     timestamps: true
