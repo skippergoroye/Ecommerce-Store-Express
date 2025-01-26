@@ -1,6 +1,6 @@
 import express, { Express, Request, Response } from "express";
 import logger from 'morgan'
-import {AdminRoute,  VendorRoute} from './routes'
+import {AdminRoute,  ShoppingRoute,  VendorRoute} from './routes'
 import dotenv from "dotenv";
 import connectDB from "./config/db";
 dotenv.config();
@@ -25,6 +25,7 @@ app.use(logger('dev'))
   
 app.use('/admin', AdminRoute);
 app.use('/vendor', VendorRoute)
+app.use('/shopping', ShoppingRoute)
 
 app.get("/", (req: Request, res: Response) => {
   res.send("Express + TypeScript Server");
